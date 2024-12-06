@@ -31,12 +31,10 @@ const login = async (req, res) =>{
     try {
 
         //recibo los datos
-        const {unsername , password} = req.body;
-
+        const {username , password} = req.body;
         //verificar que el email existe ---> findOne
 
-        const userDB = await Users.findOne({unsername})
-
+        const userDB = await Users.findOne({username})
         if(!userDB){
             return res.json({msg: "El usuario no existe"});
         }
@@ -45,8 +43,7 @@ const login = async (req, res) =>{
 
         const same = await bcrypt.compare(password, userDB.password);
         //devuelve true o false si coinciden o no
-
-        //ERROR solucionar
+        
         if(!same){
             //si no coinciden las contraseñas envio mensaje de error
             return res.json("La contraseña es incorrecta");
@@ -56,7 +53,7 @@ const login = async (req, res) =>{
 
 //const token = createToken(userDB);
        return res.json({
-            mesg: "login exitoso",
+            msg: "login exitoso",
             token: createToken(userDB)
         })
         
@@ -68,4 +65,14 @@ const login = async (req, res) =>{
 
 }
 
-module.exports = {register, login};
+const getProfile = async (req, res) => {
+    
+    //console.log(req.body.username);
+    const dataUser = await Users.find({username:req.user.username});
+    return res.json(dataUser);
+
+}
+
+
+
+module.exports = {register, login, getProfile};
