@@ -28,4 +28,15 @@ const getAll = async (req, res) => {
     
 }
 
-module.exports = {addEvent, getAll}
+const getBydId = async (req, res) => {
+    
+    try {
+        const findEvent = await Event.findById(req.params.eventId);
+        return res.json(findEvent);
+
+    } catch (error) {
+        
+    }
+}
+
+module.exports = {addEvent, getAll, getBydId}
