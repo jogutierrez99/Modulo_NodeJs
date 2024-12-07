@@ -32,6 +32,7 @@ const getBydId = async (req, res) => {
     
     try {
         const findEvent = await Event.findById(req.params.eventId);
+        
         return res.json(findEvent);
 
     } catch (error) {
@@ -39,4 +40,29 @@ const getBydId = async (req, res) => {
     }
 }
 
-module.exports = {addEvent, getAll, getBydId}
+const updateEvent = async (req, res) => {
+
+    try {
+        const eventUpdate = await Event.findByIdAndUpdate(req.params.eventId, req.body, {new:true});
+        return res.json(eventUpdate);
+
+    } catch (error) {
+        
+    }
+    
+}
+
+const deleteEventById = async (req, res) => {
+
+    try {
+        const eventDelete = await Event.findByIdAndDelete(req.params.eventId);
+        return res.json(eventDelete);
+    } catch (error) {
+        
+    }
+    
+}
+
+
+
+module.exports = {addEvent, getAll, getBydId, updateEvent, deleteEventById}
