@@ -7,11 +7,11 @@ const eventSchema = new Schema({
     date: {type:Date, require:true},
     localization: {type:String, require:true},
     typeOfSport: {type:String, require:true},
-    users:[{type: Schema.Types.ObjectId, ref: "users"}]
+    organizator:[{type: Schema.Types.ObjectId, ref: "users"}]
 },
 {
 
 });
 
-const Event = mongoose.model("event", eventSchema);
+const Event = mongoose.model("events", eventSchema);
 module.exports = Event;
