@@ -19,7 +19,7 @@ const addEvent = async (req, res) => {
 const getAll = async (req, res) => {
 
     try {
-        const list = await Event.find();
+        const list = await Event.find().populate("organizator", "username");
         return res.json(list);
 
     } catch (error) {
@@ -31,7 +31,7 @@ const getAll = async (req, res) => {
 const getBydId = async (req, res) => {
     
     try {
-        const findEvent = await Event.findById(req.params.eventId);
+        const findEvent = await Event.findById(req.params.eventId).populate("organizator", "username");
         
         return res.json(findEvent);
 
@@ -55,8 +55,47 @@ const updateEvent = async (req, res) => {
 const deleteEventById = async (req, res) => {
 
     try {
-        const eventDelete = await Event.findByIdAndDelete(req.params.eventId);
+        const eventDelete = await Event.findByIdAndDelete(req.params.eventId).populate("organizator", "username");
         return res.json(eventDelete);
+    } catch (error) {
+        
+    }
+}
+
+
+const getByDate = async (req, res) => {
+
+    try {
+        
+        const getList = await Event.find().sort({date:1}).populate("organizator", "username");
+        return res.json(getList);
+
+    } catch (error) {
+        
+    }
+    
+}
+
+const getTypeOfSport = async (req, res) => {
+
+try {
+    const list = await Event.find({typeOfSport:{$regex: req.query.type, $options:"i"}}).populate("organizator", "username");
+    return res.json(list);
+
+} catch (error) {
+    
+}
+    
+}
+
+const getDateFromTo = async (req, res) => {
+
+    try {
+        console.log(req.query.from)
+        console.log(req.query.to)
+        const getList = await Event.find({date: {$gte:req.query.from, $lte:req.query.to }}).sort({date:1}).populate("organizator", "username");
+        return res.json(getList);
+
     } catch (error) {
         
     }
@@ -65,4 +104,5 @@ const deleteEventById = async (req, res) => {
 
 
 
-module.exports = {addEvent, getAll, getBydId, updateEvent, deleteEventById}
+
+module.exports = {addEvent, getAll, getBydId, updateEvent, deleteEventById, getByDate, getTypeOfSport, getDateFromTo}
