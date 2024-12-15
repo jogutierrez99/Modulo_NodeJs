@@ -12,17 +12,17 @@ const register = async (req,res) =>{
         const userDB = await Users.find({username: newUser.username})
         //Si existe envio error de respuesta
         if(userDB.length !== 0){
-            return res.json({msg:"el usuario ya existe"});
+            return res.status(400).json({msg:"el usuario ya existe"});
         }
         //Si no existe --> Encripto la contraseña y lo añado
         newUser.password = await bcrypt.hash(newUser.password, 10);
 
         const user = await Users.create(newUser);
 
-        return res.json({msg:"Usuario creado", user});
+        return res.status(201).json({msg:"Usuario creado", user});
 
     } catch (error) {
-        console.log(error)
+        return res.status(500).json({msg:"error interno", error});
     }
 }
 
@@ -36,7 +36,7 @@ const login = async (req, res) =>{
 
         const userDB = await Users.findOne({username})
         if(!userDB){
-            return res.json({msg: "El usuario no existe"});
+            return res.status(400).json({msg: "El usuario no existe"});
         }
 
         //comparar la contraseña del usuario con la password de la BD  -- bycrypt.compare()
@@ -46,13 +46,13 @@ const login = async (req, res) =>{
         
         if(!same){
             //si no coinciden las contraseñas envio mensaje de error
-            return res.json("La contraseña es incorrecta");
+            return res.status(400).json("La contraseña es incorrecta");
         }
     
         // si coinciden creo el token
 
 //const token = createToken(userDB);
-       return res.json({
+       return res.status(200).json({
             msg: "login exitoso",
             token: createToken(userDB)
         })
@@ -69,7 +69,7 @@ const getProfile = async (req, res) => {
     
     //console.log(req.body.username);
     const dataUser = await Users.find({username:req.user.username});
-    return res.json(dataUser);
+    return res.status(200).json(dataUser);
 
 }
 
